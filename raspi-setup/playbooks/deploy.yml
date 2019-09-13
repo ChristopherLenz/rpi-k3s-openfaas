@@ -1,15 +1,13 @@
 ---
-- name: Setup cluster network
-  import_playbook: network.yml
 
 - name: Bootstrap cluster
   import_playbook: bootstrap.yml
 
-- name: Install k3s
-  import_playbook: k3s.yml
+- name: Install k3s on master
+  import_playbook: k3s_master.yml
+
+- name: Install k3s on worker
+  import_playbook: k3s_worker.yml
 
 - name: Install databases
   import_playbook: databases.yml
-
-- name: Add lcd display
-  import_playbook: lcd.yml

@@ -1,2 +1,4 @@
 *.retry
 credentials
+
+raspi-setup/logs/

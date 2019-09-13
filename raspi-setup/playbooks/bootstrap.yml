@@ -5,12 +5,14 @@
 
   tasks:
     - name: Set authorized key taken from file
+      when: not master_is_already_provisioned
       authorized_key:
         user: pi
         state: present
-        key: "{{ lookup('file', '/home/amu/.ssh/id_rsa.pub') }}"
+        key: "{{ lookup('file', '{{local_ssh_folder}}/id_rsa.pub') }}"
 
     - name: Generate RSA host key
+      when: not master_is_already_provisioned
       command: "ssh-keygen -q -t rsa -f /home/{{ rpi_username }}/.ssh/id_rsa -C \"\" -N \"\""
       args:
         creates: /home/{{ rpi_username }}/.ssh/id_rsa.pub
@@ -49,6 +51,7 @@
 
   pre_tasks:
     - name: Change pi password
+      when: do_secure
       user:
         name: pi
         password: "{{ lookup('password', '{{ playbook_dir }}/credentials/{{ inventory_hostname }}/pi.pass length=32 chars=ascii_letters,digits') }}"
@@ -60,6 +63,7 @@
         groups: sudo
   
     - name: Remove excessive privilege from pi
+      when: do_secure
       lineinfile:
         dest: /etc/sudoers
         state: present
@@ -72,11 +76,12 @@
         name: "{{ inventory_hostname }}"
 
     - name: Disable Password Authentication
+      when: do_secure
       lineinfile:
         dest=/etc/ssh/sshd_config
         regexp='^PasswordAuthentication'
         line="PasswordAuthentication no"
-       state=present
+        state=present
         backup=yes
 
     - name: set timezone
@@ -132,6 +137,7 @@
 
   tasks:
     - name: Reboot after bootstrap
+      when: not master_is_already_provisioned
       reboot:
 
 

@@ -25,4 +25,4 @@
       ignore_unreachable: True
 
     - name: wait go down
-      local_action: wait_for host={{ jumphost_ip }} port=22 state=stopped
+      local_action: wait_for host={{ master_node_ip }} port=22 state=stopped

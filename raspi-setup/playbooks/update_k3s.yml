@@ -24,7 +24,7 @@
         module: lineinfile
         dest: "{{ playbook_dir }}/credentials/k3s.yaml"
         regexp: "^    server"
-        line: "    server: https://{{ jumphost_ip }}:6443"
+        line: "    server: https://{{ master_node_ip }}:6443"
 
     - name: Create .kube directory
       become: False
